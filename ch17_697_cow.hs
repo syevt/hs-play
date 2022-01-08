@@ -1,28 +1,33 @@
-import           Control.Applicative
+import Control.Applicative
 
-data Cow = Cow
-  { name   :: String
-  , age    :: Int
-  , weight :: Int
-  }
+data Cow =
+  Cow
+    { name :: String
+    , age :: Int
+    , weight :: Int
+    }
   deriving (Eq, Show)
 
 noEmpty :: String -> Maybe String
-noEmpty ""  = Nothing
+noEmpty "" = Nothing
 noEmpty str = Just str
 
 noNegative :: Int -> Maybe Int
-noNegative n | n >= 0    = Just n
-             | otherwise = Nothing
+noNegative n
+  | n >= 0 = Just n
+  | otherwise = Nothing
 
 cowFromString :: String -> Int -> Int -> Maybe Cow
-cowFromString name' age' weight' = case noEmpty name' of
-  Nothing    -> Nothing
-  Just nammy -> case noNegative age' of
-    Nothing   -> Nothing
-    Just agey -> case noNegative weight' of
-      Nothing      -> Nothing
-      Just weighty -> Just (Cow nammy agey weighty)
+cowFromString name' age' weight' =
+  case noEmpty name' of
+    Nothing -> Nothing
+    Just nammy ->
+      case noNegative age' of
+        Nothing -> Nothing
+        Just agey ->
+          case noNegative weight' of
+            Nothing -> Nothing
+            Just weighty -> Just (Cow nammy agey weighty)
 
 cowFromString' name' age' weight' =
   Cow <$> noEmpty name' <*> noNegative age' <*> noNegative weight'
@@ -30,3 +35,10 @@ cowFromString' name' age' weight' =
 cowFromString'' :: String -> Int -> Int -> Maybe Cow
 cowFromString'' name' age' weight' =
   liftA3 Cow (noEmpty name') (noNegative age') (noNegative weight')
+
+cowFromString3 :: String -> Int -> Int -> Maybe Cow
+cowFromString3 name age weight = do
+  nammy <- noEmpty name
+  agey <- noNegative age
+  weighty <- noNegative weight
+  Just $ Cow nammy agey weighty
