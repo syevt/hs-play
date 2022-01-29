@@ -46,7 +46,9 @@ lengthToMaybe x =
   where
     l = length x
 
--- meh :: [String] -> (String -> Maybe Int) -> Maybe [Int]
 meh :: Monad m => [a] -> (a -> m b) -> m [b]
 meh [] _ = return []
 meh (head:tail) f = l2 (:) (f head) (meh tail f)
+
+flipType :: (Monad m) => [m a] -> m [a]
+flipType = flip meh id
