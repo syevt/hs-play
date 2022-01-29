@@ -25,3 +25,28 @@ l2''' f xs ys = do
   x <- fs
   y <- ys
   return (x y)
+
+ap :: (Monad m) => m (a -> b) -> m a -> m b
+ap f x = do
+  f' <- f
+  x' <- x
+  return (f' x')
+
+ap' :: (Monad m) => m (a -> b) -> m a -> m b
+ap' f x = f >>= \f' -> x >>= \x' -> return (f' x')
+
+a :: Monad m => m a -> m (a -> b) -> m b
+a = flip ap
+
+lengthToMaybe :: String -> Maybe Int
+lengthToMaybe x =
+  if even l
+    then Just l
+    else Nothing
+  where
+    l = length x
+
+-- meh :: [String] -> (String -> Maybe Int) -> Maybe [Int]
+meh :: Monad m => [a] -> (a -> m b) -> m [b]
+meh [] _ = return []
+meh (head:tail) f = l2 (:) (f head) (meh tail f)
