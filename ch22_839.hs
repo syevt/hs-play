@@ -33,11 +33,16 @@ tupledDo' s = do
   let y = cap s
   (x, y)
 
--- tupledDo'' :: [Char] -> ([Char], [Char])
--- tupledDo'' s = do
-  -- x <- (rev s, )
-  -- y <- (cap s, )
-  -- return (x, y)
+-- what was meant initially, I think
+tupledDo'' :: [Char] -> ([Char], [Char])
+tupledDo'' = do
+  x <- rev
+  y <- cap
+  return (x, y)
+
+-- again, what was meant initially, I think
+tupledBinder :: [Char] -> ([Char], [Char])
+tupledBinder = rev >>= \x -> cap >>= \y -> return (x, y)
 
 tupledBind :: [Char] -> ([Char], [Char])
 tupledBind s = return (rev s) >>= \x -> return (cap s) >>= \y -> (x, y)
@@ -46,6 +51,7 @@ tupledBind s = return (rev s) >>= \x -> return (cap s) >>= \y -> (x, y)
 --   return (rev s) >>= \ x -> return (cap s) >>= \ y -> (x, y)
 -- Why not:
 --   (\ x -> return (cap s) >>= \ y -> (x, y)) (rev s)
+
 
 tupledBind' :: [Char] -> ([Char], [Char])
 tupledBind' s = (\x -> return (cap s) >>= \y -> (x, y)) (rev s)
